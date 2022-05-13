@@ -13,23 +13,29 @@ plugins {
 group = "in.sunfox.ecg-processor"
 version = "1.0"
 
-
 publishing {
-    publications {
-        repositories {
-            maven {
-
-//                credentials {
-//                    username = sonatypeUsername
-//                    password = sonatypePassword
-//                }
-            }
+    publications{
+        create<MavenPublication>("ecg-processor"){
+            groupId = group.toString()
+            artifactId = "ecg-processor"
+            version = version.toString()
+//            from(components["java"])
+        }
+    }
+    repositories {
+        maven {
+            name = "testLibrary"
+            // change to point to your repo, e.g. http://my.org/repo
+            url = uri("https://github.com/ashishbittoyadav/testLibraryKmm")
         }
     }
 }
 
 kotlin {
-    android()
+    android{
+        publishLibraryVariants("release","debug")
+        publishLibraryVariantsGroupedByFlavor = true
+    }
 
     val xcf = XCFramework()
     listOf(
@@ -56,6 +62,7 @@ kotlin {
         val commonMain by getting {
             dependencies{
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
+                implementation("com.github.ashishbittoyadav:androidJitLib:1.0.0")
             }
         }
         val commonTest by getting {
@@ -93,6 +100,4 @@ android {
         minSdk = 21
         targetSdk = 32
     }
-
-
 }
